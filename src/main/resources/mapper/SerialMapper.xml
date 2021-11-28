@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.two.mapper.OSerial">
+    <!--    查询湿度报警信息-->
+    <select id="selectsenserid" parameterType="com.two.pojo.ProjectData" resultType="com.two.pojo.Sensorid">
+        select * from agriculture.sensor where serialid = #{serialid} and data = 1
+    </select>
+
+    <delete id="deletesenserid" parameterType="com.two.pojo.Sensorid">
+        delete from agriculture.sensor where serialid = #{serialid}
+    </delete>
+
+
+    <select id="selectco2alarm" parameterType="com.two.pojo.Sensorid" resultType="Integer">
+        select count(*) from agriculture.twoco2 where co2senserid = #{co2sensorid} and data = 1 and haveread = 1
+    </select>
+
+    <select id="selecthumialarm" parameterType="com.two.pojo.Sensorid" resultType="Integer">
+        select count(*) from agriculture.humidity where humiditysenserid = #{humisensorid} and data = 1 and haveread = 1
+    </select>
+
+    <select id="selectwatertempalarm" parameterType="com.two.pojo.Sensorid" resultType="Integer">
+        select count(*) from agriculture.twowatertemp where watertempsenserid = #{watertempsensorid} and data = 1 and
+        haveread = 1
+    </select>
+
+    <select id="selecttempalarm" parameterType="com.two.pojo.Sensorid" resultType="Integer">
+        select count(*) from agriculture.temperaturea where temperaturesenserid = #{tempsensorid} and data = 1 and
+        haveread = 1
+    </select>
+
+    <select id="selectilluminancealarm" parameterType="com.two.pojo.Sensorid" resultType="Integer">
+        select count(*) from agriculture.illumination where illuminationsenserid = #{illuminancesensorid} and data = 1
+        and haveread = 1
+    </select>
+
+    <select id="selectconductivityalarm" parameterType="com.two.pojo.Sensorid" resultType="Integer">
+        select count(*) from agriculture.twoconductivity where conductivitysenserid = #{conductivitysensorid} and data =
+        1 and haveread = 1
+    </select>
+
+
+    <!--    获取co2的最新时间和最新数据-->
+    <select id="alarmmaxtimetoco2time" parameterType="com.two.pojo.Sensorid" resultType="com.two.pojo.AllDatalog">
+        select max(createtime) as createtime from agriculture.twoco2 WHERE serialid = #{serialid} and data = 1
+    </select>
+
+    <select id="alarmmaxtimetoco2" parameterType="com.two.pojo.Sensorid" resultType="com.two.pojo.AllDatalog">
+        select co2 from agriculture.twoco2 WHERE createtime = #{createtime} and data = 1
+    </select>
+
+
+    <!--    获取temp的最新时间和最新数据-->
+    <select id="alarmmaxtimetotemptime" parameterType="com.two.pojo.Sensorid" resultType="com.two.pojo.AllDatalog">
+        select max(createtime) as createtime from agriculture.temperaturea WHERE serialid = #{serialid} and data = 1
+    </select>
+
+    <select id="alarmmaxtimetotemp" parameterType="com.two.pojo.Sensorid" resultType="com.two.pojo.AllDatalog">
+        select temperature as temp from agriculture.temperaturea WHERE createtime = #{createtime} and data = 1
+    </select>
+
+
+    <!--    获取co2的最新时间和最新数据-->
+    <select id="alarmmaxtimetohumitime" parameterType="com.two.pojo.Sensorid" resultType="com.two.pojo.AllDatalog">
+        select max(createtime) as createtime from agriculture.humidity WHERE serialid = #{serialid} and data = 1
+    </select>
+
+    <select id="alarmmaxtimetohumi" parameterType="com.two.pojo.Sensorid" resultType="com.two.pojo.AllDatalog">
+        select humidity as humi from agriculture.humidity WHERE createtime = #{createtime} and data = 1
+    </select>
+
+
+    <!--    获取co2的最新时间和最新数据-->
+    <select id="alarmmaxtimetoconductivitytime" parameterType="com.two.pojo.Sensorid"
+            resultType="com.two.pojo.AllDatalog">
+        select max(createtime) as createtime from agriculture.twoconductivity WHERE serialid = #{serialid} and data = 1
+    </select>
+
+    <select id="alarmmaxtimetoconductivity" parameterType="com.two.pojo.Sensorid" resultType="com.two.pojo.AllDatalog">
+        select conductivity from agriculture.twoconductivity WHERE createtime = #{createtime} and data = 1
+    </select>
+
+
+    <!--    获取co2的最新时间和最新数据-->
+    <select id="alarmmaxtimetowatertemptime" parameterType="com.two.pojo.Sensorid" resultType="com.two.pojo.AllDatalog">
+        select max(createtime) as createtime from agriculture.twowatertemp WHERE serialid = #{serialid} and data = 1
+    </select>
+
+    <select id="alarmmaxtimetowatertemp" parameterType="com.two.pojo.Sensorid" resultType="com.two.pojo.AllDatalog">
+        select watertemp from agriculture.twowatertemp WHERE createtime = #{createtime} and data = 1
+    </select>
+
+
+    <!--    获取co2的最新时间和最新数据-->
+    <select id="alarmmaxtimetoilluminancetime" parameterType="com.two.pojo.Sensorid"
+            resultType="com.two.pojo.AllDatalog">
+        select max(createtime) as createtime from agriculture.illumination WHERE serialid = #{serialid} and data = 1
+    </select>
+
+    <select id="alarmmaxtimetoilluminance" parameterType="com.two.pojo.Sensorid" resultType="com.two.pojo.AllDatalog">
+        select illumination as illuminance from agriculture.illumination WHERE createtime = #{createtime} and data = 1
+    </select>
+
+
+    <delete id="delectco2alarm" parameterType="com.two.pojo.Sensorid">
+        delete from agriculture.twoco2 where co2senserid = #{co2senserid}
+    </delete>
+
+    <delete id="delecthumidityalarm" parameterType="com.two.pojo.Sensorid">
+        delete from agriculture.humidity where humiditysenserid = #{humisensorid}
+    </delete>
+
+    <delete id="delecttwoconductivityalarm" parameterType="com.two.pojo.Sensorid">
+        delete from agriculture.twoconductivity where conductivitysenserid = #{conductivitysensorid}
+    </delete>
+
+    <delete id="delecttemperatureaalarm" parameterType="com.two.pojo.Sensorid">
+        delete from agriculture.temperaturea where temperaturesenserid = #{tempsensorid}
+    </delete>
+
+    <delete id="delecttwowatertempalarm" parameterType="com.two.pojo.Sensorid">
+        delete from agriculture.twowatertemp where watertempsenserid = #{watertempsensorid}
+    </delete>
+
+    <delete id="delectilluminationalarm" parameterType="com.two.pojo.Sensorid">
+        delete from agriculture.illumination where illuminationsenserid = #{illuminancesensorid}
+    </delete>
+
+    <!--    用户删除报警信息========================================================================-->
+
+    <update id="delectuserco2senser" parameterType="com.two.pojo.Sensorid">
+        update agriculture.twoco2 set data = 0,updatetime=#{updatetime} where co2senserid = #{co2senserid}
+    </update>
+
+    <update id="delectuserhumiditysenser" parameterType="com.two.pojo.Sensorid">
+        update agriculture.humidity set data = 0,updatetime=#{updatetime} where humiditysenserid = #{humisensorid}
+    </update>
+
+    <update id="delectuserconductivitysenser" parameterType="com.two.pojo.Sensorid">
+        update agriculture.twoconductivity set data = 0,updatetime=#{updatetime} where conductivitysenserid =
+        #{conductivitysensorid}
+    </update>
+
+    <update id="delectusertemperatureasenser" parameterType="com.two.pojo.Sensorid">
+        update agriculture.temperaturea set data = 0 , updatetime=#{updatetime} where temperaturesenserid =
+        #{tempsensorid}
+    </update>
+
+    <update id="delectuserwatertempsenser" parameterType="com.two.pojo.Sensorid">
+        update agriculture.twowatertemp set data = 0,updatetime=#{updatetime} where watertempsenserid =
+        #{watertempsensorid}
+    </update>
+
+    <update id="delectuserilluminationsenser" parameterType="com.two.pojo.Sensorid">
+        update agriculture.illumination set data = 0,updatetime=#{updatetime} where illuminationsenserid =
+        #{illuminancesensorid}
+    </update>
+
+
+    <!--    //============================================================================================================================-->
+
+    <!--    获取co2的data = 1 的最小时间数据-->
+    <select id="alarmmaxtimetoco2timemin" parameterType="com.two.pojo.Sensorid" resultType="com.two.pojo.AllDatalog">
+        select min(createtime) as createtime from agriculture.twoco2 WHERE co2senserid = #{co2senserid} and data = 1 and
+        haveread = 1 and #{endtime} >=createtime AND createtime >= #{starttime}
+    </select>
+
+    <!--    获取temp  data = 1 的最小时间数据-->
+    <select id="alarmmaxtimetotemptimemin" parameterType="com.two.pojo.Sensorid" resultType="com.two.pojo.AllDatalog">
+        select min(createtime) as createtime from agriculture.temperaturea WHERE temperaturesenserid = #{tempsensorid}
+        and data = 1 and haveread = 1 and #{endtime} >=createtime AND createtime >= #{starttime}
+    </select>
+
+    <!--    获取  data = 1 的最小时间数据-->
+    <select id="alarmmaxtimetohumitimemin" parameterType="com.two.pojo.Sensorid" resultType="com.two.pojo.AllDatalog">
+        select min(createtime) as createtime from agriculture.humidity WHERE humiditysenserid = #{humisensorid} and data
+        = 1 and haveread = 1 and #{endtime} >=createtime AND createtime >= #{starttime}
+    </select>
+
+    <!--    获取 data = 1 的最小时间数据-->
+    <select id="alarmmaxtimetoconductivitytimemin" parameterType="com.two.pojo.Sensorid"
+            resultType="com.two.pojo.AllDatalog">
+        select min(createtime) as createtime from agriculture.twoconductivity WHERE conductivitysenserid =
+        #{conductivitysensorid} and data = 1 and haveread = 1 and createtime BETWEEN #{starttime} AND #{endtime}
+    </select>
+
+    <!--    获取  data = 1 的最小时间数据-->
+    <select id="alarmmaxtimetowatertemptimemin" parameterType="com.two.pojo.Sensorid"
+            resultType="com.two.pojo.AllDatalog">
+        select min(createtime) as createtime from agriculture.twowatertemp WHERE watertempsenserid =
+        #{watertempsensorid} and data = 1 and haveread = 1 and createtime BETWEEN #{starttime} AND #{endtime}
+    </select>
+
+    <!--    获取  data = 1 的最小时间数据-->
+    <select id="alarmmaxtimetoilluminancetimemin" parameterType="com.two.pojo.Sensorid"
+            resultType="com.two.pojo.AllDatalog">
+        select min(createtime) as createtime from agriculture.illumination WHERE illuminationsenserid =
+        #{illuminancesensorid} and data = 1 and haveread = 1 and createtime BETWEEN #{starttime} AND #{endtime}
+    </select>
+
+
+    <!--    L=====================================================================================================================================-->
+    <select id="selecttimebeteennowtominco2" parameterType="com.two.pojo.Sensorid" resultType="com.two.pojo.AllDatalog">
+        select * from agriculture.twoco2 where co2senserid = #{co2senserid} and data = 1 and createtime BETWEEN
+        #{starttime} AND #{endtime}
+    </select>
+
+    <select id="selecttimebeteennowtominhumi" parameterType="com.two.pojo.Sensorid"
+            resultType="com.two.pojo.AllDatalog">
+        select * from agriculture.humidity where humiditysenserid = #{humisensorid} and data = 1 and createtime BETWEEN
+        #{starttime} AND #{endtime}
+    </select>
+
+    <select id="selecttimebeteennowtomintemp" parameterType="com.two.pojo.Sensorid"
+            resultType="com.two.pojo.AllDatalog">
+        select * from agriculture.temperaturea where temperaturesenserid = #{tempsensorid} and data = 1 and createtime
+        BETWEEN #{starttime} AND #{endtime}
+    </select>
+
+    <select id="selecttimebeteennowtomintwoconductivity" parameterType="com.two.pojo.Sensorid"
+            resultType="com.two.pojo.AllDatalog">
+        select * from agriculture.twoconductivity where conductivitysenserid = #{conductivitysensorid} and data = 1 and
+        createtime BETWEEN #{starttime} AND #{endtime}
+    </select>
+
+    <select id="selecttimebeteennowtominwatertemp" parameterType="com.two.pojo.Sensorid"
+            resultType="com.two.pojo.AllDatalog">
+        select * from agriculture.twowatertemp where watertempsenserid = #{watertempsensorid} and data = 1 and
+        createtime BETWEEN #{starttime} AND #{endtime}
+    </select>
+
+    <select id="selecttimebeteennowtominillumination" parameterType="com.two.pojo.Sensorid"
+            resultType="com.two.pojo.AllDatalog">
+        select * from agriculture.illumination where illuminationsenserid = #{illuminancesensorid} and data = 1 and
+        createtime BETWEEN #{starttime} AND #{endtime}
+    </select>
+
+
+    <!--    <=============================================================================================================================================-->
+
+    <update id="updatehandleco2" parameterType="com.two.pojo.AllDatalog">
+        update agriculture.twoco2 set haveread = #{haveread},updatetime=#{updatetime} where onlyid = #{onlyid}
+    </update>
+
+    <update id="updatehandlehumi" parameterType="com.two.pojo.AllDatalog">
+        update agriculture.humidity set haveread = #{haveread},updatetime=#{updatetime} where onlyid = #{onlyid}
+    </update>
+
+    <update id="updatehandlewtomintemp" parameterType="com.two.pojo.AllDatalog">
+        update agriculture.temperaturea set haveread = #{haveread},updatetime=#{updatetime} where onlyid = #{onlyid}
+    </update>
+
+    <update id="updatehandleconductivity" parameterType="com.two.pojo.AllDatalog">
+        update agriculture.twoconductivity set haveread = #{haveread},updatetime=#{updatetime} where onlyid = #{onlyid}
+    </update>
+
+    <update id="updatehandlewatertemp" parameterType="com.two.pojo.AllDatalog">
+        update agriculture.twowatertemp set haveread = #{haveread},updatetime=#{updatetime} where onlyid = #{onlyid}
+    </update>
+
+    <update id="updatehandleillumination" parameterType="com.two.pojo.AllDatalog">
+        update agriculture.illumination set haveread = #{haveread},updatetime=#{updatetime} where onlyid = #{onlyid}
+    </update>
+
+
+    <!--    <=========================================================================================================================-->
+    <select id="selecthandleonlyid" parameterType="com.two.pojo.Handle" resultType="com.two.pojo.Handle">
+        select * from agriculture.handle where starttime =#{starttime} and senserid = #{senserid}
+    </select>
+
+    <insert id="inserthandle" parameterType="com.two.pojo.Handle">
+        insert into agriculture.handle(alarmonlyid,senserid, handlename, handleresult,total,data, starttime,
+        endtime,delect, updatetime, createtime)
+        values(#{alarmonlyid},#{senserid},#{handlename},#{handleresult},#{total},#{data},#{starttime},#{endtime}, 1
+        ,#{updatetime},#{createtime})
+    </insert>
+
+    <update id="updatehandle" parameterType="com.two.pojo.Handle">
+        update agriculture.handle set handleresult = #{handleresult},updatetime=#{updatetime} where starttime =
+        #{starttime}
+    </update>
+
+
+    <!--    <=================================================================================================================================-->
+
+    <select id="selectco2alarmtatol" parameterType="com.two.pojo.Sensorid" resultType="Integer">
+        select count(*) from agriculture.twoco2 where co2senserid = #{co2sensorid} and data = 1 and createtime BETWEEN
+        #{starttime} AND #{endtime}
+    </select>
+
+    <select id="selecthumialarmtatol" parameterType="com.two.pojo.Sensorid" resultType="Integer">
+        select count(*) from agriculture.humidity where humiditysenserid = #{humisensorid} and data = 1 and createtime
+        BETWEEN #{starttime} AND #{endtime}
+    </select>
+
+    <select id="selectwatertempalarmtatol" parameterType="com.two.pojo.Sensorid" resultType="Integer">
+        select count(*) from agriculture.twowatertemp where watertempsenserid = #{watertempsensorid} and data = 1 and
+        createtime BETWEEN #{starttime} AND #{endtime}
+    </select>
+
+    <select id="selecttempalarmtatol" parameterType="com.two.pojo.Sensorid" resultType="Integer">
+        select count(*) from agriculture.temperaturea where temperaturesenserid = #{tempsensorid} and data = 1 and
+        createtime BETWEEN #{starttime} AND #{endtime}
+    </select>
+
+    <select id="selectilluminancealarmtatol" parameterType="com.two.pojo.Sensorid" resultType="Integer">
+        select count(*) from agriculture.illumination where illuminationsenserid = #{illuminancesensorid} and data = 1
+        and createtime BETWEEN #{starttime} AND #{endtime}
+    </select>
+
+    <select id="selectconductivityalarmtatol" parameterType="com.two.pojo.Sensorid" resultType="Integer">
+        select count(*) from agriculture.twoconductivity where conductivitysenserid = #{conductivitysensorid} and data =
+        1 and createtime BETWEEN #{starttime} AND #{endtime}
+    </select>
+
+
+    <!--    <========================================================================================================================================-->
+    <select id="selectserialidbysensoridco2" parameterType="com.two.pojo.Sensorid" resultType="com.two.pojo.Sensorid">
+        select * from agriculture.sensor where co2sensorid = #{sensor} and data =1
+    </select>
+
+    <select id="selectserialidbysensoridhumi" parameterType="com.two.pojo.Sensorid" resultType="com.two.pojo.Sensorid">
+        select * from agriculture.sensor where humisensorid = #{sensor} and data =1
+    </select>
+
+    <select id="selectserialidbysensoridwatertemp" parameterType="com.two.pojo.Sensorid"
+            resultType="com.two.pojo.Sensorid">
+        select * from agriculture.sensor where watertempsensorid = #{sensor} and data =1
+    </select>
+
+    <select id="selectserialidbysensoridtemp" parameterType="com.two.pojo.Sensorid" resultType="com.two.pojo.Sensorid">
+        select * from agriculture.sensor where tempsensorid = #{sensor} and data =1
+    </select>
+
+    <select id="selectserialidbysensoridilluminance" parameterType="com.two.pojo.Sensorid"
+            resultType="com.two.pojo.Sensorid">
+        select * from agriculture.sensor where illuminancesensorid = #{sensor} and data =1
+    </select>
+
+    <select id="selectserialidbysensoridconductivity" parameterType="com.two.pojo.Sensorid"
+            resultType="com.two.pojo.Sensorid">
+        select * from agriculture.sensor where conductivitysensorid = #{sensor} and data =1
+    </select>
+
+</mapper>

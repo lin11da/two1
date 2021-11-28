@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.two.mapper.OUserm">
+    <!--userid查询信息-->
+    <select id="getUserInfo" parameterType="com.two.pojo.User" resultType="com.two.pojo.User">
+        select * from agriculture.user where userid = #{userid}
+    </select>
+
+    <!--用户按电话号码查询信息-->
+    <select id="existuser" parameterType="com.two.pojo.User" resultType="com.two.pojo.User">
+        select * from agriculture.user where usernumber = #{usernumber} and data = 1
+    </select>
+
+    <!--用户登录-->
+    <select id="loginuser" parameterType="com.two.pojo.User" resultType="com.two.pojo.User">
+        select * from agriculture.user where usernumber = #{usernumber} and password = #{password} and  data = 1
+    </select>
+
+    <!--用户注册-->
+    <insert id="Userregistered" parameterType="com.two.pojo.User">
+        insert into agriculture.user(userid,username,usernumber,password,data,authority,updatetime,createtime)
+        values(#{userid},#{username},#{usernumber},#{password},#{data},#{authority},#{updatetime},#{createtime})
+    </insert>
+
+    <!--用户注销-->
+    <update id="logout" useGeneratedKeys="true" keyProperty="usernumber,data" parameterType="com.two.pojo.User">
+        update agriculture.user set data=#{data} where usernumber=#{usernumber}
+    </update>
+
+    <!--用户添加设备-->
+    <insert id="useraddequipment" parameterType="com.two.pojo.User">
+        insert into
+        agriculture.userequipment(userid,serialid,equipmentname,typesof,status,data,disable,updatetime,createtime)
+        values(#{userid},#{serialid},#{equipmentname},#{typesof},0,#{data},1,#{updatetime},#{createtime})
+    </insert>
+
+    <!--查询该设备是否被用户绑定-->
+    <select id="selectuserquipment" parameterType="com.two.pojo.AddAllequipment"
+            resultType="com.two.pojo.AddAllequipment">
+        select * from agriculture.userequipment where userid = #{userid} and serialid = #{serialid}
+    </select>
+
+    <!--查询该设备是否已经被注册-->
+    <select id="selectexist" parameterType="com.two.pojo.AddAllequipment" resultType="com.two.pojo.AddAllequipment">
+        select * from agriculture.userequipment where serialid = #{serialid} and data = 1
+    </select>
+
+    <!--查询项目设备信息-->
+    <select id="selectequipmentdata" parameterType="com.two.pojo.AddAllequipment"
+            resultType="com.two.pojo.AddAllequipment">
+        select * from agriculture.userequipment where serialid = #{serialid} and data = 1 limit
+        #{startIndex},#{pageSize};
+    </select>
+
+    <!--    查询用户设备个数-->
+    <select id="selectuseridequipment" parameterType="com.two.pojo.AddAllequipment" resultType="Integer">
+        select count(*) from agriculture.userequipment where userid = #{userid} and data = 1 and disable = 1;
+    </select>
+
+    <!--    查询用户传感器设备个数-->
+    <select id="selectuseridsensor" parameterType="com.two.pojo.AddAllequipment" resultType="Integer">
+        select count(*) from agriculture.userequipment where userid = #{userid} and typesof = 1
+    </select>
+
+    <!--    //查看有多少个设备在线-->
+    <select id="countequipmentonline" parameterType="com.two.pojo.AddAllequipment" resultType="Integer">
+        select count(*) from agriculture.userequipment where userid = #{userid} and data = 1 and status = 1;
+    </select>
+
+    <!--用户修改密码-->
+    <update id="updatauserpassword" useGeneratedKeys="true" keyProperty="usernumber,password" parameterType="String">
+        update agriculture.user set password=#{password} where usernumber=#{usernumber}
+    </update>
+
+    <!--用户修改data-->
+    <update id="updatauserdata" parameterType="com.two.pojo.User">
+        update agriculture.user set username=#{username},usernumber = #{usernumber} where userid=#{userid}
+    </update>
+
+    <!--=插入温度数据-->
+    <insert id="inserttemperature" parameterType="com.two.pojo.AddAllequipment">
+        insert into agriculture.temperaturea(userid,serialid,typesof,temperature,updatetime,createtime)
+        values(#{userid},#{serialid},#{typesof},#{temperature},#{updatetime},#{createtime})
+    </insert>
+
+    <!--=插入湿度数据-->
+    <insert id="inserthumidity" parameterType="com.two.pojo.AddAllequipment">
+        insert into agriculture.humidity(userid,serialid,typesof,humidity,updatetime,createtime)
+        values(#{userid},#{serialid},#{typesof},#{humidity},#{updatetime},#{createtime})
+    </insert>
+
+    <!--=插入光照数据-->
+    <insert id="insertillumination" parameterType="com.two.pojo.AddAllequipment">
+        insert into agriculture.illumination(userid,serialid,typesof,illumination,updatetime,createtime)
+        values(#{userid},#{serialid},#{typesof},#{illumination},#{updatetime},#{createtime})
+    </insert>
+
+
+    <!--selecuserid-->
+    <select id="selecuserid" parameterType="com.two.pojo.Allequipment" resultType="com.two.pojo.Allequipment">
+        select * from agriculture.userequipment where userid = #{userid}
+    </select>
+
+    <!--查看用户下的设备-->
+    <select id="alluserqeuipment" parameterType="com.two.pojo.AddAllequipment"
+            resultType="com.two.pojo.AddAllequipment">
+        select * from agriculture.userequipment where userid = #{userid}
+    </select>
+
+    <!--用户修改设备名称-->
+    <update id="updatauserequipmentusername" useGeneratedKeys="true"
+            keyProperty="userid,serialid,equipmentname,updatetime" parameterType="String">
+        update agriculture.userequipment set updatetime = #{updatetime},equipmentname = #{equipmentname} where userid =
+        #{userid} and serialid = #{serialid}
+    </update>
+
+
+    <!--=插入用户设定的阈值-->
+    <insert id="insertuserEquipment" parameterType="com.two.pojo.Threshold">
+        insert into agriculture.threshold( userid, serialid, illumination, temperature, humidity, co2, watertemp,
+        conductivity, updatetime, createtime)
+        values(#{userid},#{serialid},#{illumination},#{temperature},#{humidity},#{co2},#{watertemp},#{conductivity},#{updatetime},#{createtime})
+    </insert>
+
+
+    <!--查看用户是否设定了阈值-->
+    <select id="existuserthreshold" parameterType="com.two.pojo.Threshold" resultType="com.two.pojo.Threshold">
+        select * from agriculture.threshold where userid = #{userid} and serialid = #{serialid}
+    </select>
+
+
+    <!--用户修改设备阈值-->
+    <update id="updateuserEquipmentthreshold" parameterType="com.two.pojo.Threshold">
+        update agriculture.threshold set humidity=#{humidity},temperature = #{temperature}, illumination =
+        #{illumination},
+        co2 = #{co2},watertemp = #{watertemp},conductivity = #{conductivity} where serialid=#{serialid}
+    </update>
+
+
+    <!--查看用户历史记录-->
+    <select id="userillumination" parameterType="com.two.pojo.Threshold" resultType="com.two.pojo.Illumination">
+        select * from agriculture.illumination where userid = #{userid} and serialid = #{serialid}
+    </select>
+
+
+    <!--用户按电话号码查询用户有多少 个设备-->
+    <select id="existuserAllequipment" parameterType="com.two.pojo.User" resultType="com.two.pojo.User">
+        select * from agriculture.user where usernumber = #{usernumber}
+    </select>
+
+    <select id="userloginlog" parameterType="com.two.pojo.User" resultType="com.two.pojo.User">
+        select * from agriculture.user where usernumber = #{usernumber}
+    </select>
+
+    <!--    插入可查询的记录-->
+    <insert id="insertloginlog" parameterType="com.two.pojo.AddAllequipment">
+        insert into agriculture.userloginlog(userid,ip,logintime,updatetime,createtime)
+        values(#{userid},#{ip},#{logintime},#{updatetime},#{createtime})
+    </insert>
+
+
+    <!--    用serialid查询 onlyid 和创建时间-->
+    <select id="selectequipmentdatalog" parameterType="com.two.pojo.AddAllequipment"
+            resultType="com.two.pojo.ProjectData">
+        select datalog.onlyid,datalog.createtime from agriculture.datalog where serialid = #{serialid} and status = 1
+        limit #{startIndex},#{pageSize}
+    </select>
+
+    <!--    用onlyid查询数据-->
+    <select id="selectuserequipmentalarmlog" resultType="com.two.pojo.Rdata" parameterType="com.two.pojo.ProjectData">
+        select
+        (select conductivity from agriculture.twoconductivity WHERE onlyid =#{onlyid} ) as conductivity,
+        (select watertemp FROM agriculture.twowatertemp WHERE onlyid = #{onlyid} ) as watertemp ,
+        (select illumination from agriculture.illumination WHERE onlyid = #{onlyid} ) as illuminance ,
+        (select humidity from agriculture.humidity WHERE onlyid =#{onlyid} ) as humi ,
+        (select temperature from agriculture.temperaturea WHERE onlyid = #{onlyid} ) as temp ,
+        (select co2 from agriculture.twoco2 WHERE onlyid = #{onlyid} ) as co2
+    </select>
+
+
+    <!--    //未处理报警次数-->
+    <select id="alarmuntreatedtotal" resultType="com.two.pojo.RIntdata" parameterType="com.two.pojo.ProjectData">
+        select
+        (select count(*) from agriculture.twoconductivity WHERE userid = #{userid} and data = 1 and haveread = 1 ) as
+        conductivity,
+        (select count(*) FROM agriculture.twowatertemp WHERE userid = #{userid} and data = 1 and haveread = 1 ) as
+        watertemp ,
+        (select count(*) from agriculture.illumination WHERE userid = #{userid} and data = 1 and haveread = 1 ) as
+        illuminance ,
+        (select count(*) from agriculture.humidity WHERE userid = #{userid} and data = 1 and haveread = 1 ) as humi ,
+        (select count(*) from agriculture.temperaturea WHERE userid = #{userid} and data = 1 and haveread = 1 ) as temp
+        ,
+        (select count(*) from agriculture.twoco2 WHERE userid = #{userid} and data = 1 and haveread = 1 ) as co2
+    </select>
+
+    <!--    //已处理次数-->
+    <select id="alarmhavingtotal" resultType="com.two.pojo.RIntdata" parameterType="com.two.pojo.ProjectData">
+        select
+        (select count(*) from agriculture.twoconductivity WHERE userid = #{userid} and data = 1 and haveread = 0 ) as
+        conductivity,
+        (select count(*) FROM agriculture.twowatertemp WHERE userid = #{userid} and data = 1 and haveread = 0 ) as
+        watertemp ,
+        (select count(*) from agriculture.illumination WHERE userid = #{userid} and data = 1 and haveread = 0 ) as
+        illuminance ,
+        (select count(*) from agriculture.humidity WHERE userid = #{userid} and data = 1 and haveread = 0 ) as humi ,
+        (select count(*) from agriculture.temperaturea WHERE userid = #{userid} and data = 1 and haveread = 0 ) as temp
+        ,
+        (select count(*) from agriculture.twoco2 WHERE userid = #{userid} and data = 1 and haveread = 0 ) as co2
+
+    </select>
+
+
+    <!--    //每个月报警次数-->
+
+    <select id="alarmtotaltomonthbydatalog" resultType="com.two.pojo.RIntdata" parameterType="com.two.pojo.ProjectData">
+        select
+        (select count(*) from agriculture.twoconductivity WHERE userid = #{userid} and data = 1 and createtime BETWEEN
+        #{starttime} AND #{endtime} ) as conductivity,
+        (select count(*) FROM agriculture.twowatertemp WHERE userid = #{userid} and data = 1 and createtime BETWEEN
+        #{starttime} AND #{endtime} ) as watertemp ,
+        (select count(*) from agriculture.illumination WHERE userid = #{userid} and data = 1 and createtime BETWEEN
+        #{starttime} AND #{endtime} ) as illuminance ,
+        (select count(*) from agriculture.humidity WHERE userid = #{userid} and data = 1 and createtime BETWEEN
+        #{starttime} AND #{endtime} ) as humi ,
+        (select count(*) from agriculture.temperaturea WHERE userid = #{userid} and data = 1 and createtime BETWEEN
+        #{starttime} AND #{endtime} ) as temp ,
+        (select count(*) from agriculture.twoco2 WHERE userid = #{userid} and data = 1 and createtime BETWEEN
+        #{starttime} AND #{endtime} ) as co2
+    </select>
+
+
+    <!--    //查询每个月已处理次数 -->
+    <select id="alarmhavingtotaltoMonth" resultType="com.two.pojo.RIntdata" parameterType="com.two.pojo.ProjectData">
+        select
+        (select count(*) from agriculture.twoconductivity WHERE userid = #{userid} and data = 1 and haveread = 0 and
+        createtime BETWEEN #{starttime} AND #{endtime} ) as conductivity,
+        (select count(*) FROM agriculture.twowatertemp WHERE userid = #{userid} and data = 1 and haveread = 0 and
+        createtime BETWEEN #{starttime} AND #{endtime} ) as watertemp ,
+        (select count(*) from agriculture.illumination WHERE userid = #{userid} and data = 1 and haveread = 0 and
+        createtime BETWEEN #{starttime} AND #{endtime} ) as illuminance ,
+        (select count(*) from agriculture.humidity WHERE userid = #{userid} and data = 1 and haveread = 0 and createtime
+        BETWEEN #{starttime} AND #{endtime} ) as humi ,
+        (select count(*) from agriculture.temperaturea WHERE userid = #{userid} and data = 1 and haveread = 0 and
+        createtime BETWEEN #{starttime} AND #{endtime} ) as temp ,
+        (select count(*) from agriculture.twoco2 WHERE userid = #{userid} and data = 1 and haveread = 0 and createtime
+        BETWEEN #{starttime} AND #{endtime} ) as co2
+    </select>
+
+
+    <!--    查询有多少条温湿度等。。。。。。数据-->
+    <select id="selectuseridequipmentlogtatol" parameterType="com.two.pojo.ProjectData" resultType="Integer">
+        select count(*) from agriculture.datalog where userid = #{userid} and status = 1
+    </select>
+    <!--    删除设备记录-->
+    <update id="delectdatalogs" parameterType="com.two.pojo.ProjectData">
+        update agriculture.datalog set status=0 , data = 0 where onlyid=#{onlyid}
+    </update>
+
+
+    <!--删除设备记录2-->
+    <update id="delectdataalllogs" parameterType="com.two.pojo.ProjectData">
+        update agriculture.alldatalog set status=0 where onlyid=#{onlyid}
+    </update>
+
+    <insert id="serialidsenser" parameterType="com.two.pojo.Sensorid">
+        insert into agriculture.sensor(userid, serialid, co2sensorid, tempsensorid, humisensorid, conductivitysensorid,
+        watertempsensorid, illuminancesensorid,data, updatetime, createtime)
+        values(#{userid},#{serialid},#{co2sensorid},#{tempsensorid},#{humisensorid},#{conductivitysensorid},#{watertempsensorid},#{illuminancesensorid},1,#{updatetime},#{createtime})
+    </insert>
+
+
+    <update id="updateprodata" parameterType="com.two.pojo.Allequipment">
+        update agriculture.userequipment set equipmentname=#{equipmentname},typesof = #{typesof} where
+        serialid=#{serialid}
+    </update>
+
+
+    <update id="updateprojectid" parameterType="com.two.pojo.Allequipment">
+        update agriculture.project ject , agriculture.projectdata data set ject.projectid=#{projectid},
+        data.projectid=#{projectid} where ject.projectid=#{oldprojectid}
+    </update>
+
+
+    <!--    //删除已处理数据  delect = 0-->
+    <update id="delectprocessed" parameterType="com.two.pojo.Handle">
+        update agriculture.handle set delect = 0 where alarmonlyid = #{alarmonlyid}
+    </update>
+
+    <!--    //删除设备-->
+    <delete id="delectuserequipment" parameterType="com.two.pojo.ProjectData">
+        delete from agriculture.projectdata where projectid = #{projectid} and serialid = #{serialid}
+    </delete>
+
+    <delete id="delectequipmenttouserequipment" parameterType="com.two.pojo.ProjectData">
+        delete from agriculture.userequipment where userid = #{userid} and serialid = #{serialid}
+    </delete>
+
+    <delete id="delectequipment" parameterType="com.two.pojo.ProjectData">
+        delete from agriculture.userequipment where userid = #{userid}
+    </delete>
+
+
+    <update id="delectdatalogsall" parameterType="com.two.pojo.ProjectData">
+        update agriculture.datalog set data = 0 where onlyid=#{serialid}
+    </update>
+
+    <select id="selectuserdata" parameterType="com.two.pojo.User" resultType="com.two.pojo.User">
+        select * from agriculture.user where userid = #{userid} and data = 1
+    </select>
+
+
+</mapper>

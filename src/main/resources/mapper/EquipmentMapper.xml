@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.two.mapper.OEquipment">
+
+    <!--equipmentserialidexist-->
+    <select id="equipmentserialidexist" parameterType="com.two.pojo.Allequipment"
+            resultType="com.two.pojo.Allequipment">
+        select * from agriculture.allequipment where serialid = #{serialid}
+    </select>
+
+    <!--查询typesof中是否有这个类型的硬件-->
+    <select id="equipmenttypesof" parameterType="com.two.pojo.Typesofname" resultType="com.two.pojo.Typesofname">
+        select * from agriculture.typesofname where typesof = #{typesof}
+    </select>
+
+
+    <!--遍历数据库，一次性请求全部已经注册的设备-->
+    <select id="indexequipment" resultType="com.two.pojo.Allequipment">
+        SELECT a.equipmentid, u.id , u.serialid, a.secretid from agriculture.userequipment u , agriculture.allequipment
+        a WHERE u.serialid = a.serialid and u.disable = 1 and a.data = 1 and a.disable = 1
+    </select>
+
+    <!--    查询全部用户已注册设备  data = 1-->
+    <select id="selectalluserequipment" resultType="com.two.pojo.Allequipment">
+        select * from agriculture.userequipment where data = 1 and disable = 1
+    </select>
+    <!--    用serialid查询equipmentid-->
+    <select id="selectuserequipmentid" parameterType="com.two.pojo.ProjectData" resultType="com.two.pojo.Allequipment">
+        select * from agriculture.allequipment where serialid = #{serialid}
+    </select>
+
+
+    <!--    查询被注册后的全部设备-->
+    <select id="selecttoserialid" parameterType="Map" resultType="com.two.pojo.User">
+        select * from agriculture.userequipment where data = #{data} and serialid = #{serialid}
+    </select>
+    <!--    <delete id="deleteById" parameterType="User">-->
+    <!--        delete from suer where userid=#{userid}-->
+    <!--    </delete>-->
+    <!--    查询每个设备的设置的阈值-->
+    <select id="selectthreshold" parameterType="com.two.pojo.AddAllequipment" resultType="com.two.pojo.Threshold">
+        select * from agriculture.threshold where serialid = #{serialid}
+    </select>
+
+
+    <update id="updataccid" parameterType="com.two.pojo.AddAllequipment">
+        update agriculture.userequipment set updatetime = #{updatetime},cgsn = #{cgsn},ccid = #{ccid} where serialid =
+        #{serialid}
+    </update>
+
+
+    <!--    插入CO2   haveread = 1 表示未读-->
+    <insert id="insertuserequipmentco2" parameterType="com.two.pojo.AddAllequipment">
+        insert into agriculture.twoco2(onlyid,userid, serialid, typesof,co2 ,co2senserid ,haveread,data, updatetime,
+        createtime)
+        values(#{onlyid},#{userid},#{serialid},#{typesof},#{co2},#{co2senserid},1,1,#{updatetime},#{createtime})
+    </insert>
+
+    <!--    插入湿度-->
+    <insert id="insertuserequipmenthumi" parameterType="com.two.pojo.AddAllequipment">
+        insert into agriculture.humidity(onlyid,userid, serialid, typesof, humidity, humiditysenserid,haveread,data,
+        updatetime, createtime)
+        values(#{onlyid},#{userid},#{serialid},#{typesof},#{humidity},#{humiditysenserid},1,1,#{updatetime},#{createtime})
+    </insert>
+
+    <!--    //插入温度-->
+    <insert id="insertuserequipmenttemp" parameterType="com.two.pojo.AddAllequipment">
+        insert into agriculture.temperaturea(onlyid,userid, serialid, typesof,
+        temperature,temperaturesenserid,haveread,data, updatetime, createtime)
+        values(#{onlyid},#{userid},#{serialid},#{typesof},#{temperature},#{temperaturesenserid},1,1,#{updatetime},#{createtime})
+    </insert>
+
+    <!--    插入光照-->
+    <insert id="insertuserequipmentillumination" parameterType="com.two.pojo.AddAllequipment">
+        insert into agriculture.illumination(onlyid,userid, serialid, typesof,illumination,illuminationsenserid,haveread
+        , data,updatetime, createtime)
+        values(#{onlyid},#{userid},#{serialid},#{typesof},#{illumination},#{illuminationsenserid},1,1,#{updatetime},#{createtime})
+    </insert>
+
+    <!--    插入phph-->
+    <insert id="insertuserequipmentph" parameterType="com.two.pojo.AddAllequipment">
+        insert into agriculture.twoconductivity(onlyid,userid, serialid,
+        typesof,conductivity,conductivitysenserid,haveread ,data, updatetime, createtime)
+        values(#{onlyid},#{userid},#{serialid},#{typesof},#{conductivity},#{conductivitysenserid},1,1,#{updatetime},#{createtime})
+    </insert>
+
+    <!--    插入shuiwen-->
+    <insert id="insertuserequipmentwatertemp" parameterType="com.two.pojo.AddAllequipment">
+        insert into agriculture.twowatertemp(onlyid,userid, serialid, typesof,watertemp,watertempsenserid,haveread,data,
+        updatetime, createtime)
+        values(#{onlyid},#{userid},#{serialid},#{typesof},#{watertemp},#{watertempsenserid},1,1,#{updatetime},#{createtime})
+    </insert>
+
+    <!--    记录设备录入的信息-->
+    <insert id="insertuserdatalog" parameterType="com.two.pojo.ProjectData">
+        insert into agriculture.datalog( onlyid, userid,serialid, status,data, updatetime, createtime)
+        values(#{onlyid},#{userid},#{serialid},1,1,#{updatetime},#{createtime})
+    </insert>
+
+    <select id="selectsenser" parameterType="com.two.pojo.Sensorid" resultType="com.two.pojo.Sensorid">
+        select * from agriculture.sensor where serialid = #{serialid} and data =1
+    </select>
+
+
+</mapper>

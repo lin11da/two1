@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.two.mapper.OProject">
+
+
+    <!--projectid查询信息  project-->
+    <select id="getProjectInfo" parameterType="com.two.pojo.ProjectData" resultType="com.two.pojo.ProjectData">
+        select * from agriculture.project where projectid = #{projectid}
+    </select>
+
+    <!--用户创建项目-->
+    <insert id="projectregistered" parameterType="com.two.pojo.ProjectData">
+        insert into agriculture.project(projectid, userid, projectname, projectleader, headofsafety,
+        addressproject,longitude,latitude,status,data, updatetime, createtime)
+        values(#{projectid},#{userid},#{projectname},#{projectleader},#{headofsafety},#{addressproject},#{longitude},#{latitude},0,1,#{updatetime},#{createtime})
+    </insert>
+
+    <!--查询全部项目信息-->
+    <select id="selectallproject" parameterType="com.two.pojo.ProjectData" resultType="com.two.pojo.ProjectData">
+        select * from agriculture.project where userid = #{userid} and data = '1'
+    </select>
+
+    <!--    //查询用户下的项目个数-->
+    <select id="projecttotal" parameterType="com.two.pojo.ProjectData" resultType="Integer">
+        select count(*) from agriculture.project where data = 1 and userid = #{userid}
+    </select>
+
+    <select id="selectprojecton" parameterType="com.two.pojo.ProjectData" resultType="com.two.pojo.ProjectData">
+        select * from agriculture.project where userid = #{userid} and projectid = #{projectid} and data =1
+    </select>
+
+    <!--    用户更新项目信息-->
+    <update id="updateprojectdata" parameterType="com.two.pojo.ProjectData">
+        update agriculture.project set projectname = #{projectname},projectleader = #{projectleader},headofsafety=
+        #{headofsafety},addressproject=#{addressproject},updatetime=#{updatetime},longitude = #{longitude},latitude =
+        #{latitude} where projectid = #{projectid}
+    </update>
+
+    <!--    查询项目设备数量-->
+    <select id="selectequipmenttatol" parameterType="com.two.pojo.ProjectData" resultType="Integer">
+        select count(*) from agriculture.projectdata where projectid = #{projectid}
+    </select>
+
+    <insert id="insertequipmenttoproject" parameterType="com.two.pojo.ProjectData">
+        insert into agriculture.projectdata(onlyid, projectid, serialid, updatetime, createtime)
+        values(#{onlyid},#{projectid},#{serialid},#{updatetime},#{createtime})
+    </insert>
+
+    <!--    查询项目设备信息-->
+    <select id="selecteequipmentdata" parameterType="com.two.pojo.ProjectData" resultType="com.two.pojo.ProjectData">
+        select * from agriculture.projectdata where projectid = #{projectid}
+    </select>
+
+    <!--    查询这个项目里是否有这个设备-->
+    <select id="selectprojectid" parameterType="com.two.pojo.ProjectData" resultType="Boolean">
+        select * from agriculture.projectdata where serialid = #{serialid} and projectid = #{projectid}
+    </select>
+    <select id="selectprojectinuserid" parameterType="com.two.pojo.ProjectData" resultType="Boolean">
+        select * from agriculture.project where projectid = #{projectid} and userid = #{userid}
+    </select>
+
+    <!--   查询设备数量-->
+    <select id="selectetatol" parameterType="com.two.pojo.ProjectData" resultType="Integer">
+        select count(*) from agriculture.datalog where serialid = #{serialid} and status = '1'
+    </select>
+
+    <!--    存入全部数据-->
+    <insert id="insertalldatalog" parameterType="com.two.pojo.AllDatalog">
+        insert into agriculture.alldatalog(onlyid, userid, serialid,projectid, temp, co2, humi, conductivity, watertemp,
+        illuminance, haveread,status, updatetime, createtime) VALUES
+        (#{onlyid},#{userid},#{serialid},#{projectid},#{temp},#{co2},#{humi},#{conductivity},#{watertemp},#{illuminance},#{haveread},#{status},#{updatetime},#{createtime})
+    </insert>
+
+    <select id="selectdatatatol" parameterType="com.two.pojo.ProjectData" resultType="Integer">
+        select count(*) from agriculture.alldatalog where serialid = #{serialid} and status = '1'
+    </select>
+
+    <!--    选择设备查找信息-->
+    <select id="chooseselectalldatalog" parameterType="com.two.pojo.AllDatalog" resultType="com.two.pojo.AllDatalog">
+        select * from agriculture.alldatalog where serialid = #{serialid} and status = '1' limit #{startIndex},#{pageSize};
+    </select>
+
+    <!--    查找全部设备信息-->
+    <select id="selectalldatalog" parameterType="com.two.pojo.AllDatalog" resultType="com.two.pojo.AllDatalog">
+        select * from agriculture.alldatalog where userid = #{userid} and status = 1 limit #{startIndex},#{pageSize};
+    </select>
+
+    <select id="selectuserdatatatol" parameterType="com.two.pojo.ProjectData" resultType="Integer">
+        select count(*) from agriculture.alldatalog where userid = #{userid} and status = 1
+    </select>
+
+    <!--    查找projectdata表-->
+    <select id="selectprojectidtodata" parameterType="com.two.pojo.ProjectData" resultType="com.two.pojo.ProjectData">
+        select * from agriculture.projectdata where serialid = #{serialid}
+    </select>
+    <!--    用projectid查找projectdata表-->
+    <select id="selectprojectbyprojectid" parameterType="com.two.pojo.ProjectData"
+            resultType="com.two.pojo.ProjectData">
+        select * from agriculture.projectdata where projectid = #{projectid}
+    </select>
+
+
+    <!--    查询alldatalog数据中某一天得到平均值-->
+    <select id="selectonedaydataaverage" parameterType="Map" resultType="com.two.pojo.DoubleData">
+        SELECT
+        (SELECT AVG(co2) FROM agriculture.twoco2 where serialid = #{serialid} and #{starttime} >= createtime and
+        createtime >= #{endtime}) as co2 ,
+        (SELECT AVG(conductivity) FROM agriculture.twoconductivity where serialid = #{serialid} and
+        #{starttime}>=createtime and createtime>= #{endtime}) as conductivity,
+        (SELECT AVG(illumination) FROM agriculture.illumination where serialid = #{serialid} and #{starttime} >=
+        createtime and createtime >= #{endtime}) as illuminance ,
+        (SELECT AVG(watertemp) FROM agriculture.twowatertemp where serialid = #{serialid} and #{starttime} >= createtime
+        and createtime >= #{endtime}) as watertemp,
+        (SELECT AVG(humidity) FROM agriculture.humidity where serialid = #{serialid} and #{starttime} >= createtime and
+        createtime >= #{endtime}) as humi,
+        (SELECT AVG(temperaturea.temperature) FROM agriculture.temperaturea where serialid = #{serialid} and
+        #{starttime} >= createtime and createtime >= #{endtime}) as temp
+    </select>
+
+    <!--    //查询设备报警信息-->
+    <select id="selectdatalog" parameterType="com.two.pojo.Allequipment" resultType="com.two.pojo.ProjectData">
+        select distinct serialid from agriculture.datalog where createtime between #{starttime} and #{endtime} and data
+        = 1
+    </select>
+
+    <!--    根据userid 查询报警信息  去重-->
+    <select id="selectdataloguser" parameterType="com.two.pojo.Allequipment" resultType="com.two.pojo.ProjectData">
+        select distinct serialid from agriculture.datalog where userid = #{userid} and data = 1 and createtime BETWEEN
+        #{starttime} AND #{endtime}
+    </select>
+
+
+    <select id="selectsenseridonbyuserid" parameterType="com.two.pojo.Sensorid" resultType="com.two.pojo.Sensorid">
+        select * from agriculture.sensor where userid = #{userid} and data = 1
+    </select>
+
+    <select id="selectuserhandle" parameterType="com.two.pojo.Sensorid" resultType="com.two.pojo.Handle">
+        select * from agriculture.handle where senserid = #{senserid} and delect = 1
+    </select>
+
+    <!--    启动设备-->
+    <update id="updatesrialidstatus" parameterType="com.two.pojo.ProjectData">
+        update agriculture.userequipment set status = #{status},updatetime=#{updatetime} where serialid = #{serialid}
+    </update>
+
+    <update id="updateprojectstatus" parameterType="com.two.pojo.ProjectData">
+        update agriculture.project set status = #{status},updatetime=#{updatetime} where projectid = #{projectid}
+    </update>
+    <!--    用户删除项目-->
+    <update id="delectproject" parameterType="com.two.pojo.ProjectData">
+        update agriculture.project set data = 0,updatetime=#{updatetime} where projectid = #{projectid}
+    </update>
+
+    <update id="serialonline" parameterType="com.two.pojo.ProjectData">
+        update agriculture.userequipment set status = #{status},updatetime=#{updatetime} where serialid = #{serialid}
+    </update>
+
+    <delete id="delectthreshold" parameterType="com.two.pojo.ProjectData">
+        delete from agriculture.threshold where serialid = #{serialid} and userid = #{userid}
+    </delete>
+
+
+</mapper>

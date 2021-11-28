@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.two.mapper.ORootm">
+
+    <!--serialid查询信息(序列号)-->
+    <select id="equipmentserialid" parameterType="com.two.pojo.AddAllequipment"
+            resultType="com.two.pojo.AddAllequipment">
+        select * from agriculture.allequipment where serialid = #{serialid}
+    </select>
+
+    <insert id="addsuperroot" parameterType="com.two.pojo.Root">
+        insert into agriculture.root(userid, username, usernumber, password, accoutid, authority, updatetime,
+        createtime)
+        values(#{userid},#{username},#{usernumber},#{password},#{accoutid},#{authority},#{updatetime},#{createtime})
+    </insert>
+
+    <delete id="deletesuperroot" parameterType="com.two.pojo.Root">
+        DELETE FROM agriculture.root
+        WHERE usernumber = #{usernumber}
+    </delete>
+
+    <!--equipmentid查询信息-->
+    <select id="equipmentidselect" parameterType="com.two.pojo.AddAllequipment"
+            resultType="com.two.pojo.AddAllequipment">
+        select * from agriculture.allequipment where equipmentid = #{equipmentid}
+    </select>
+
+    <!--管理员按电话号码查询  管理员表全部信息-->
+    <select id="existroot" parameterType="com.two.pojo.Root" resultType="com.two.pojo.Root">
+        select * from agriculture.root where usernumber = #{usernumber}
+    </select>
+
+
+    <!--管理员按电话号码查询  管理员表全部信息-->
+    <select id="selectroot" parameterType="com.two.pojo.Root" resultType="com.two.pojo.Root">
+        select * from agriculture.root where userid = #{userid}
+    </select>
+
+    <!--管理员登录-->
+    <select id="loginroot" parameterType="com.two.pojo.Root" resultType="com.two.pojo.Root">
+        select * from agriculture.root where usernumber = #{usernumber} and password = #{password}
+    </select>
+
+    <update id="updatarootdata" parameterType="com.two.pojo.Root">
+        update agriculture.root set usernumber=#{usernumber},username = #{username} where userid=#{userid}
+    </update>
+
+    <!--管理员添加设备-->
+    <insert id="addequipment" parameterType="com.two.pojo.AddAllequipment">
+        insert into
+        agriculture.allequipment(onlyid,equipmentid,secretid,serialid,typesof,data,disable,updatetime,createtime)
+        values(#{onlyid},#{equipmentid},#{secretid},#{serialid},#{typesof},#{data},1,#{updatetime},#{createtime})
+    </insert>
+
+    <!--最高权限管理员设置某一用户为管理员-->
+    <insert id="updateusertoroot" parameterType="com.two.pojo.Root">
+        insert into agriculture.root(userid,username,usernumber,password,authority,updatetime,createtime)
+        values(#{userid},#{username},#{usernumber},#{password},#{authority},#{updatetime},#{createtime})
+    </insert>
+
+    <!--管理员修改密码-->
+    <update id="updatarootpassword" useGeneratedKeys="true" keyProperty="usernumber,password" parameterType="String">
+        update agriculture.root set password=#{password} where usernumber=#{usernumber}
+    </update>
+
+    <!--管理员修改name-->
+    <update id="updatarootnumber" useGeneratedKeys="true" keyProperty="usernumber,username" parameterType="String">
+        update agriculture.root set username=#{username} where usernumber=#{usernumber}
+    </update>
+    <!--查询全部用户-->
+    <select id="selectAlluser" parameterType="Map" resultType="com.two.pojo.AllUser">
+        select * from agriculture.user where data = 1 order by data desc limit #{startIndex},#{pageSize}
+    </select>
+
+    <!--查询全部管理员-->
+    <select id="selectAllroot" parameterType="Map" resultType="com.two.pojo.Root">
+        select * from agriculture.root limit #{startIndex},#{pageSize}
+    </select>
+
+    <!--    <delete id="deleteById" parameterType="User">-->
+    <!--        delete from suer where userid=#{userid}-->
+    <!--    </delete>-->
+    <!---->
+
+    <!--查看用户设备详细-->
+    <select id="selectUserEquipment" parameterType="com.two.pojo.AddAllequipment"
+            resultType="com.two.pojo.SelectuserEquipment">
+        select * from agriculture.userequipment where userid = #{userid}
+    </select>
+    <!--修改用户的设备名称-->
+    <update id="rootupdateuserequipment" parameterType="com.two.pojo.AddAllequipment">
+        update agriculture.userequipment set equipmentname=#{equipmentname},updatetime=#{updatetime} , typesof =
+        #{typesof} where userid=#{userid} and serialid = #{serialid}
+    </update>
+    <!--查看某设备下的阈值-->
+    <select id="rootselectuserthreshold" parameterType="com.two.pojo.Threshold"
+            resultType="com.two.pojo.ReturnThreshold">
+        select * from agriculture.threshold where serialid = #{serialid}
+    </select>
+    <!--管理员修改用户阈值-->
+    <update id="rootupdatauserthreshiold" parameterType="com.two.pojo.AddAllequipment">
+        update agriculture.threshold set illumination=#{illumination},temperature = #{temperature},humidity =
+        #{humidity},updatetime=#{updatetime}
+        where userid=#{userid} and serialid = #{serialid}
+    </update>
+
+
+    <!--管理员修改用户全部信息-->
+    <update id="rootupdatauserinformation" parameterType="com.two.pojo.User">
+        update agriculture.user set username = #{username}, usernumber = #{usernumber}, password=#{password}, updatetime
+        = #{updatetime} where userid=#{userid}
+    </update>
+
+
+    <!--userid查询信息-->
+    <select id="getRootInfo" parameterType="com.two.pojo.Root" resultType="com.two.pojo.Root">
+        select * from agriculture.root where userid = #{userid}
+    </select>
+
+
+    <!--查看这个设备信息是否被删除-->
+    <select id="serialidanduseridselect" parameterType="com.two.pojo.Threshold"
+            resultType="com.two.pojo.SelectuserEquipment">
+        select * from agriculture.userequipment where userid = #{userid} and serialid = #{serialid}
+    </select>
+
+    <!--    查询有设备号的全部设备-->
+    <select id="Allequipemnt" resultType="com.two.pojo.SelectAllequipment" parameterType="Map">
+        SELECT a.disable, a.onlyid, a.equipmentid, a.secretid, a.serialid ,t.typesofname, a.updatetime,a.createtime
+        from agriculture.allequipment a , agriculture.typesofname t WHERE a.typesof = t.typesof and data=1 limit
+        #{startIndex},#{pageSize}
+    </select>
+
+    <!--    管理员删除设备-->
+    <delete id="delectequipemnt" parameterType="com.two.pojo.Allequipment">
+        DELETE agriculture.allequipment FROM agriculture.allequipment
+        WHERE agriculture.allequipment.onlyid=#{onlyid};
+    </delete>
+    <!--    查询全部设备总数-->
+    <select id="selectallequipment" resultType="Integer">
+        select count(*) from agriculture.allequipment
+    </select>
+    <!--    查询全部用户数量-->
+    <select id="selectusertotal" resultType="Integer">
+        select count(*) from agriculture.user where data = 1
+    </select>
+    <!--    查询用户有多少个设备-->
+    <select id="selectuserhaveequipment" resultType="Integer">
+        select count(*) from agriculture.userequipment where userid = #{userid} and data = 1
+    </select>
+
+    <!--    <select id="getequipmentbylimit" parameterType="" resultType="Payment">-->
+    <!--        select * from rfiduser.payment where userid = #{userid} limit #{startIndex},#{pageSize}-->
+    <!--    </select>-->
+    <!--    管理员更改设备数据-->
+    <update id="updateequipment" useGeneratedKeys="true"
+            keyProperty="equipmentid,secretid,serialid,typesof,updatetime,onlyid" parameterType="String">
+        update agriculture.allequipment set equipmentid=#{equipmentid},serialid = #{serialid},secretid =
+        #{secretid},typesof = #{typesof},updatetime=#{updatetime} where onlyid = #{onlyid}
+    </update>
+
+    <!--查询管理员总数-->
+    <select id="selectAllrootpags" resultType="Integer">
+        select count(*) from agriculture.root
+    </select>
+
+    <!--    查询登录日志-->
+    <select id="userloginlog" parameterType="com.two.pojo.Allequipment" resultType="com.two.pojo.Userloginlog">
+        SELECT u.userid , u.username, u.usernumber, log.ip, log.logintime from agriculture.user u ,
+        agriculture.userloginlog log WHERE u.userid = log.userid and log.userid = #{userid} limit
+        #{startIndex},#{pageSize}
+    </select>
+
+    <!--    查询日志总数-->
+    <select id="userloginlogtotal" resultType="Integer">
+        select count(*) from agriculture.userloginlog where userid = #{userid}
+    </select>
+
+
+    <!--    删除管理员-->
+    <delete id="delectroot" parameterType="com.two.pojo.Allequipment">
+        DELETE agriculture.root FROM agriculture.root
+        WHERE root.userid=#{userid};
+    </delete>
+
+    <!--    删除用户-->
+    <update id="deleteuser" parameterType="com.two.pojo.Allequipment">
+        update agriculture.user set updatetime = #{updatetime},data = 0 where userid = #{userid}
+    </update>
+
+
+    <!--    管理员删除用户的设备-->
+    <delete id="delectuserequipemnt" parameterType="com.two.pojo.Allequipment">
+        DELETE agriculture.userequipment FROM agriculture.userequipment
+        WHERE agriculture.userequipment.userid = #{userid} and userequipment.serialid = #{serialid}
+    </delete>
+
+    <!--    管理员删除用户的设备-->
+    <delete id="delectuserequipemnttoproject" parameterType="com.two.pojo.ProjectData">
+        DELETE FROM agriculture.projectdata
+        WHERE serialid = #{serialid}
+    </delete>
+
+    <!--    查询用户 usernumber,username,password 信息-->
+    <select id="selectuserdatauserid" parameterType="com.two.pojo.User" resultType="com.two.pojo.User">
+        select usernumber,username,password from agriculture.user where userid = #{userid}
+    </select>
+
+
+    <!--    查询报警次数-->
+    <select id="selectpolicefrequency" parameterType="com.two.pojo.AddAllequipment"
+            resultType="com.two.pojo.ReturnThresholdtotal">
+        select
+        (select count(*) from agriculture.twowatertemp where serialid = #{serialid} and twowatertemp.createtime BETWEEN
+        #{starttime} AND #{endtime}) as watertemptimes,
+        (select count(*) from agriculture.twoconductivity where serialid = #{serialid} and twoconductivity.createtime
+        BETWEEN #{starttime} AND #{endtime}) as phtimes,
+        (select count(*) from agriculture.twoco2 where serialid = #{serialid} and twoco2.createtime BETWEEN #{starttime}
+        AND #{endtime}) as co2times,
+        (select count(*) from agriculture.illumination where serialid = #{serialid} and illumination.createtime BETWEEN
+        #{starttime} AND #{endtime}) as illuminationtimes,
+        (select count(*) from agriculture.temperaturea where serialid = #{serialid} and temperaturea.createtime BETWEEN
+        #{starttime} AND #{endtime}) as temperaturetimes,
+        (select count(*) from agriculture.humidity where serialid = #{serialid} and humidity.createtime BETWEEN
+        #{starttime} AND #{endtime}) as humiditytimes
+    </select>
+
+    <!--    查询项目报警数总数-->
+    <select id="selectalarmtotal" parameterType="com.two.pojo.AddAllequipment" resultType="com.two.pojo.RIntdata">
+        select
+        (select count(*) from agriculture.twowatertemp where serialid = #{serialid} and data = 1 ) as watertemp,
+        (select count(*) from agriculture.twoconductivity where serialid = #{serialid} and data = 1 ) as conductivity,
+        (select count(*) from agriculture.twoco2 where serialid = #{serialid} and data = 1) as co2,
+        (select count(*) from agriculture.illumination where serialid = #{serialid} and data = 1) as illuminance,
+        (select count(*) from agriculture.temperaturea where serialid = #{serialid} and data = 1) as temp,
+        (select count(*) from agriculture.humidity where serialid = #{serialid} and data = 1) as humi
+    </select>
+
+
+    <!--    查询某个时间的最大的时间戳，也就是最新的报警信息-->
+    <select id="selectpolicealarmtime" parameterType="com.two.pojo.AddAllequipment" resultType="com.two.pojo.Alarmtime">
+        select
+        (select max(createtime) from agriculture.twoconductivity WHERE serialid = #{serialid} and
+        twoconductivity.createtime BETWEEN #{starttime} AND #{endtime} ) as conductivityalarmtime,
+        (select max(createtime) from agriculture.twowatertemp WHERE serialid = #{serialid} and twowatertemp.createtime
+        BETWEEN #{starttime} AND #{endtime}) as watertempalarmtime ,
+        (select max(createtime) from agriculture.illumination WHERE serialid = #{serialid} and illumination.createtime
+        BETWEEN #{starttime} AND #{endtime}) as illuminationalarmtime ,
+        (select max(createtime) from agriculture.humidity WHERE serialid = #{serialid} and humidity.createtime BETWEEN
+        #{starttime} AND #{endtime}) as humidityalarmtime,
+        (select max(createtime) from agriculture.temperaturea WHERE serialid = #{serialid} and temperaturea.createtime
+        BETWEEN #{starttime} AND #{endtime}) as temperaturealarmtime,
+        (select max(createtime) from agriculture.twoco2 WHERE serialid = #{serialid} and twoco2.createtime BETWEEN
+        #{starttime} AND #{endtime}) as co2alarmtime
+    </select>
+    <!--    查询报警的最新数据-->
+    <select id="selectalarmdata" parameterType="com.two.pojo.AddAllequipment"
+            resultType="com.two.pojo.ReturnThresholdtotal">
+        select
+        (select twoconductivity.conductivity from agriculture.twoconductivity WHERE serialid = #{serialid} and
+        twoconductivity.createtime = #{conductivitycreatetime} ) as conductivity,
+        (select twowatertemp.watertemp from agriculture.twowatertemp WHERE serialid = #{serialid} and
+        twowatertemp.createtime = #{watertempcreatetime}) as watertemp ,
+        (select illumination.illumination from agriculture.illumination WHERE serialid = #{serialid} and
+        illumination.createtime = #{illuminationcreatetime}) as illumination ,
+        (select humidity.humidity from agriculture.humidity WHERE serialid = #{serialid} and humidity.createtime =
+        #{humiditycreatetime}) as humidity ,
+        (select temperaturea.temperature from agriculture.temperaturea WHERE serialid = #{serialid} and
+        temperaturea.createtime = #{temperaturecreatetime}) as temperature ,
+        (select twoco2.co2 from agriculture.twoco2 WHERE serialid = #{serialid} and twoco2.createtime =
+        #{co2createtime}) as co2
+    </select>
+    <!--    查询设备状态-->
+    <select id="selectusereruipmentstatus" parameterType="com.two.pojo.AddAllequipment"
+            resultType="com.two.pojo.AddAllequipment">
+        select * from agriculture.userequipment where serialid = #{serialid}
+    </select>
+
+
+    <!--    查看有多少个已注册设备-->
+    <select id="userequipmenttotal" parameterType="com.two.pojo.Allequipment" resultType="Integer">
+        select count(*) from agriculture.userequipment where createtime BETWEEN #{starttime} AND #{endtime}
+    </select>
+
+    <select id="selectdatalog" resultType="com.two.pojo.ProjectData" parameterType="com.two.pojo.ProjectData">
+        select * from agriculture.datalog where serialid = #{serialid} and data = 1
+    </select>
+
+    <update id="disableequipment" parameterType="com.two.pojo.ProjectData">
+        update agriculture.allequipment set updatetime = #{updatetime},disable = #{disable} where serialid = #{serialid}
+    </update>
+
+</mapper>

@@ -1,0 +1,28 @@
+mybatis:
+  type-aliases-package: com.chen.pojo
+  mapper-locations: classpath:mapper/*.xml
+
+spring:
+  datasource:
+    username: agricultureadmin
+    password: agricultureadmin
+    url: jdbc:mysql://39.106.217.31:3306/agriculture?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 3
+      maximum-pool-size: 10
+  redis:
+    host: 39.106.217.31
+    #    host: 127.0.0.1updatarootnumber
+    port: 6379
+    #    password:
+    password: chendada
+    database: 3
+    timeout: 30000ms
+
+
+
+
+server:
+  port: 8089
+
